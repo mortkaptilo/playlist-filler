@@ -1,33 +1,34 @@
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom, useSetAtom } from "jotai";
+import { IconX } from "@tabler/icons-react";
 import {
   seedTracksAtom,
   recommendationsAtom,
   isLoadingRecsAtom,
   recErrorAtom,
-} from '../store/atoms'
-import { getRecommendations } from '../api'
-import { TrackItem } from './TrackItem'
+} from "../store/atoms";
+import { getRecommendations } from "../api";
+import { TrackItem } from "./TrackItem";
 
 export function SeedPlaylist() {
-  const [seedTracks, setSeedTracks] = useAtom(seedTracksAtom)
-  const setRecommendations = useSetAtom(recommendationsAtom)
-  const [isLoading, setIsLoading] = useAtom(isLoadingRecsAtom)
-  const setError = useSetAtom(recErrorAtom)
+  const [seedTracks, setSeedTracks] = useAtom(seedTracksAtom);
+  const setRecommendations = useSetAtom(recommendationsAtom);
+  const [isLoading, setIsLoading] = useAtom(isLoadingRecsAtom);
+  const setError = useSetAtom(recErrorAtom);
 
   function removeTrack(track_id: string) {
-    setSeedTracks(prev => prev.filter(t => t.track_id !== track_id))
+    setSeedTracks((prev) => prev.filter((t) => t.track_id !== track_id));
   }
 
   async function fillPlaylist() {
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
     try {
-      const recs = await getRecommendations(seedTracks.map(t => t.track_id))
-      setRecommendations(recs)
+      const recs = await getRecommendations(seedTracks.map((t) => t.track_id));
+      setRecommendations(recs);
     } catch {
-      setError('Could not reach the server. Make sure the backend is running.')
+      setError("Could not reach the server. Make sure the backend is running.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -39,7 +40,7 @@ export function SeedPlaylist() {
         </h2>
         {seedTracks.length > 0 && (
           <span className="text-xs text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded-full">
-            {seedTracks.length} track{seedTracks.length !== 1 ? 's' : ''}
+            {seedTracks.length} track{seedTracks.length !== 1 ? "s" : ""}
           </span>
         )}
       </div>
@@ -59,7 +60,9 @@ export function SeedPlaylist() {
               d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
             />
           </svg>
-          <p className="text-sm text-zinc-500">Search above to add seed tracks</p>
+          <p className="text-sm text-zinc-500">
+            Search above to add seed tracks
+          </p>
         </div>
       ) : (
         <ul className="flex flex-col gap-1 max-h-80 overflow-y-auto pr-1">
@@ -74,12 +77,11 @@ export function SeedPlaylist() {
                 action={
                   <button
                     onClick={() => removeTrack(track.track_id)}
-                    className="opacity-0 group-hover:opacity-100 mr-2 shrink-0 transition-opacity text-zinc-500 hover:text-red-400 p-1 rounded-md hover:bg-red-400/10"
+                    className="opacity-0 group-hover:opacity-100 mr-2 shrink-0 transition-opacity text-zinc-500 hover:text-red-400 p-1 rounded-md hover:bg-red-400/10
+                    cursor-pointer"
                     aria-label="Remove track"
                   >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <IconX className="w-4 h-4" />
                   </button>
                 }
               />
@@ -95,21 +97,46 @@ export function SeedPlaylist() {
       >
         {isLoading ? (
           <>
-            <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            <svg
+              className="w-4 h-4 animate-spin"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+              />
             </svg>
             Finding tracks…
           </>
         ) : (
           <>
             Fill Playlist
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </>
         )}
       </button>
     </div>
-  )
+  );
 }
